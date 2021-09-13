@@ -22,14 +22,14 @@ class Gridworld():
         Upper left corner(Start) and lower right corner(End) are always unblocked.
         """ 
         if self.__valid_input():
-            self.gridworld = [[0 for i in range(self._dim + 2)] for j in range(self._dim + 2)]
+            self.gridworld = [[1 for i in range(self._dim + 2)] for j in range(self._dim + 2)]
 
             for j in range(1, self._dim + 1):
                 for i in range(1, self._dim + 1):
                     if random.uniform(0, 1) > self._density:
-                        self.gridworld[i][j] = 1
+                        self.gridworld[i][j] = 0
 
-            self.gridworld[0][0] = self.gridworld[self._dim + 1][self._dim + 1] = 0
+            self.gridworld[1][1] = self.gridworld[self._dim][self._dim] = 0
 
     def __valid_input(self):
         """
