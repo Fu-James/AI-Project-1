@@ -1,6 +1,6 @@
 import matplotlib as ml
 import matplotlib.pyplot as plt
-import gridworld
+from gridworld import Gridworld
 
 def main():
     """
@@ -10,9 +10,10 @@ def main():
     """
     dim = int(input("Enter the dimension: "))
     p = float(input("Enter the probabilty: "))
-    gw = gridworld.gridworld(dim, p)
+    gw = Gridworld(dim, p)
+    print(gw)
     plt.figure(figsize=(5, 5))
-    plt.imshow(gw)
+    plt.imshow(gw.gridworld)
     plt.show()
 
 if __name__ == "__main__":
