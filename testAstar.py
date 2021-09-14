@@ -11,7 +11,7 @@ print(testmaze)
 
 dim=5
 start = Cell(0,0,0,dim,None)
-result = func_Astar(start, [dim-1,dim-1] , testmaze, dim = dim )
+result = func_Astar(start, [dim-1,dim-1] , testmaze, dim )
 
 ##track back the path
 print('----------path (backwards)--------')
