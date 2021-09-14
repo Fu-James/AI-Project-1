@@ -69,6 +69,7 @@ def func_Astar(start, goal, maze, dim):
     while not fringe.empty():
         current = fringe.get().item
         visited.add(current.getIndex())
+        trajectory.append(current.getIndex())
         print('-----')
         print('current')
         print(current.getIndex())
@@ -89,7 +90,7 @@ def func_Astar(start, goal, maze, dim):
                 print('child')
                 print(str(child[0] * dim + child[1]) + ',' + str(child_f))
 
-                trajectory.append(child_cell.getIndex())
+                
 
     return 'no solution'
 
