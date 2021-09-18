@@ -54,6 +54,7 @@ class Cell:
         return children
 
     def getIndex(self):
+
         return (self.index)
 
 
@@ -68,11 +69,16 @@ def func_Astar(start, goal, maze, dim):
 
     while not fringe.empty():
         current = fringe.get().item
+        if current.getIndex() in visited:
+            continue
         visited.add(current.getIndex())
         trajectory.append(current.getIndex())
+
+        """
         print('-----')
         print('current')
         print(current.getIndex())
+        """
 
         if [current.x, current.y] == goal:
             return current
@@ -81,17 +87,17 @@ def func_Astar(start, goal, maze, dim):
         children = current.getChildren()
         for child in children:
 
-            if maze[child[0], child[1]] != 1 and (child[0] * dim + child[1] not in visited):
+            if maze[child[0]][child[1]] != 1 and (child[0] * dim + child[1] not in visited):
                 child_f = currentg + 1 + np.abs(dim - 1 - child[0]) + np.abs(dim - 1 - child[1])
                 child_parent = current
                 child_cell = Cell(child[0], child[1], currentg + 1, dim, child_parent)
                 fringe.put(PrioritizedItem(child_f, child_cell))
 
+                """
                 print('child')
                 print(str(child[0] * dim + child[1]) + ',' + str(child_f))
-
+                """             
                 
-
     return 'no solution'
 
 
