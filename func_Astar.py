@@ -1,70 +1,45 @@
-import numpy as np
 from queue import PriorityQueue
+from gridworld import Cell, Gridworld
 
 # PrioritizedItem is used to configure the priority queue
 # such that it will only compare the priority, not the item
 from dataclasses import dataclass, field
 from typing import Any
+
+
 @dataclass(order=True)
 class PrioritizedItem():
     priority: int
-    item: Any=field(compare=False)
+    item: Cell = field(compare=False)
 
 
-def func_Astar(start, goal, maze, dim):
-    
+def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
+
     fringe = PriorityQueue()
     fringe.put(PrioritizedItem(start.get_fscore(), start))
 
     visited = set()
-
-    trajectory = [start.getIndex()]
+    trajectory = [start.get_index()]
 
     while not fringe.empty():
         current = fringe.get().item
-        if current.getIndex() in visited:
+        if current.get_index() in visited:
             continue
-        visited.add(current.getIndex())
-        trajectory.append(current.getIndex())
-
-        """
-        print('-----')
-        print('current')
-        print(current.getIndex())
-        """
+        visited.add(current.get_index())
+        trajectory.append(current.get_index())
 
         if [current.x, current.y] == goal:
             return current
 
         currentg = current.get_gscore()
-        children = current.getChildren()
-        
-        for child in children:            
+        children = current.get_children()
+
+        for child in children:
             maze_child = maze.get_cell(child[0], child[1])
-            if maze_child.flag != 1 and (child[0] * dim + child[1] not in visited):
-                #here update cell of maze
+            if maze_child.get_flag() != 1 and (child[0] * dim + child[1] not in visited):
                 maze_child.update_gscore(currentg + 1)
                 maze_child.update_parent(current)
-                #child_cell = Cell(child[0], child[1], currentg + 1, dim, current)
-                fringe.put(PrioritizedItem(maze_child.get_fscore(), maze_child))
+                fringe.put(PrioritizedItem(
+                    maze_child.get_fscore(), maze_child))
 
-                """
-                print('child')
-                print(str(child[0] * dim + child[1]) + ',' + str(child_f))
-                """             
-                
-    return 'no solution'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return None
