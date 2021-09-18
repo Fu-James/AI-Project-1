@@ -14,7 +14,19 @@ class PrioritizedItem():
 
 
 def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
+    """
+    Create a cell.
+    Parameters:
+    ----------
+    start : Initial search point
+    goal : x and y coordinate of the goal cell
+    maze : Unexplored gridworld
+    dim : Dimension of the gridworld as a int.
 
+    Returns:
+    -------
+    cell, status_string: Returns cell if goal node is found along with a status string.
+    """
     fringe = PriorityQueue()
     fringe.put(PrioritizedItem(start.get_fscore(), start))
 
@@ -29,7 +41,7 @@ def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
         trajectory.append(current.get_index())
 
         if [current.x, current.y] == goal:
-            return current
+            return current, 'solution'
 
         currentg = current.get_gscore()
         children = current.get_children()
@@ -42,4 +54,4 @@ def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
                 fringe.put(PrioritizedItem(
                     c.get_fscore(), c))
 
-    return 'no solution'
+    return None, 'no_solution'

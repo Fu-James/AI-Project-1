@@ -22,7 +22,6 @@ class Cell():
     cell: A object which mainly holds four values.
     g(n), h(n), f(n) and a pointer to parent.
     """
-
     def __init__(self, x: int, y: int, gscore: int, dim: int, parent=None, flag: int = 0) -> None:
         super().__init__()
         self.x = x

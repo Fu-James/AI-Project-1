@@ -19,8 +19,8 @@ def main():
     plt.imshow(gw.get_grid_ascii())
 
     algorithm = Repeated_Astar(dim, p, [0, 0], [dim-1, dim-1], gw)
-    solution = algorithm.find_path()
-    if solution == 'no solution':
+    solution, status = algorithm.find_path()
+    if status == 'no_solution':
         print("No Solution.")
     else:
         for cell in solution:
