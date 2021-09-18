@@ -13,19 +13,20 @@ def main():
     p = float(input("Enter the probabilty: "))
     gw = Gridworld(dim, p)
     print(gw)
-    plt.figure(num="maze", figsize=(8, 8), tight_layout=True)
-    plt.imshow(gw.gridworld)
+    plt.figure(num="Grid World", figsize=(8, 8), tight_layout=True)
+    plt.imshow(gw.get_grid_ascii())
 
     algorithm = Repeated_Astar(dim, p, [0, 0], [dim-1, dim-1], gw)
     solution = algorithm.find_path()
     if solution == 'no solution':
-        print('No solution')
+        print('No Solution')
     else:
         for cell in solution:
-            gw.gridworld[cell.x][cell.y] = 0.5
-        plt.figure(num="solution", figsize=(8, 8), tight_layout=True)
-        plt.imshow(gw.gridworld)
-    plt.show()            
+            gw.get_cell(cell.x, cell.y).flag = 2
+        plt.figure(num="Solved Grid World", figsize=(8, 8), tight_layout=True)
+        plt.imshow(gw.get_grid_ascii())    
+    print(gw)      
+    plt.show()
 
 if __name__ == "__main__":
     main()
