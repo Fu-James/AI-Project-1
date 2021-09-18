@@ -20,7 +20,7 @@ def main():
 
     algorithm = Repeated_Astar(dim, p, [0, 0], [dim-1, dim-1], gw)
     solution = algorithm.find_path()
-    if solution == None:
+    if solution == 'no solution':
         print("No Solution.")
     else:
         for cell in solution:

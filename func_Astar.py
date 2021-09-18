@@ -42,4 +42,4 @@ def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
                 fringe.put(PrioritizedItem(
                     maze_child.get_fscore(), maze_child))
 
-    return None
+    return 'no solution'

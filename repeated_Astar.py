@@ -30,13 +30,31 @@ class Repeated_Astar():
             path.append(current)
         return path
 
-    def find_path(self) -> list:
-        start_cell = self._knowledge.get_cell(0, 0)
+    # def find_path(self) -> list:
+    #     start_cell = self._knowledge.get_cell(0, 0)
+    #     while True:
+    #         goal_cell = func_Astar(
+    #             start_cell, self._goal, self._knowledge, self._dim)
+    #         if goal_cell == None:
+    #             return None
+    #         path = self.generate_path(goal_cell)
+    #         start_cell = self.path_walker(path)
+    #         if start_cell == 'find the solution':
+    #             return self.generate_path(goal_cell)
+
+    def find_path(self):
+        start_cell = Cell(self._start[0], self._start[1], 0, self._dim, None)
+        # goal_cell = func_Astar(start_cell, self._goal, self._knowledge, self._dim)
+        # if goal_cell == 'no solution':
+        #     return 'no solution'
+        # path = self.generate_path(goal_cell)
+        # stop_cell = self.path_walker(path)
+        # if stop_cell == 'find the solution':
+        #     return self.generate_path(goal_cell)
         while True:
-            goal_cell = func_Astar(
-                start_cell, self._goal, self._knowledge, self._dim)
-            if goal_cell == None:
-                return None
+            goal_cell = func_Astar(start_cell, self._goal, self._knowledge, self._dim)
+            if goal_cell == 'no solution':
+                return 'no solution'
             path = self.generate_path(goal_cell)
             start_cell = self.path_walker(path)
             if start_cell == 'find the solution':
