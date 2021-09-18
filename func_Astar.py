@@ -1,5 +1,6 @@
 import numpy as np
 from queue import PriorityQueue
+from heuristics import heuristics
 
 # PrioritizedItem is used to configure the priority queue
 # such that it will only compare the priority, not the item
@@ -11,34 +12,39 @@ class PrioritizedItem:
     item: Any=field(compare=False)
 
 
-class Cell:
-
+class Cell():
     def __init__(self, x, y, gscore, dim, parent):
+        super().__init__()
         self.x = x
         self.y = y
         self.dim = dim
         self.index = x * self.dim + y
-        self.gscore = gscore
-        self.hscore = np.abs(self.dim - 1 - x) + np.abs(self.dim - 1 - y)  # to be replaced by huristic function
-        self.fscore = self.gscore + self.hscore
+        self.update_g(gscore)             
         self.parent = parent
         # self.children = None
 
-    def printSelf(self):
-        print('print self start')
-        print(self.index)
-        print(self.gscore)
-        print(self.hscore)
-        print(self.fscore)
-        print('print self end')
+    def update_g(self, gscore: int):
+        self.gscore = gscore
+        self.__update_heuristics()
+        self.__update_f()
 
-    def getG(self):
-        return self.gscore
+    def __update_heuristics(self, option: int=0):
+        self.hscore = heuristics(A=[self.dim - 1, self.dim - 1], B=[self.x, self.y], option=option)
+        
 
-    def getH(self):
+    def __update_f(self):
+        self.fscore = self.get_gscore() + self.get_heuristic()
+
+    def __str__(self) -> str:
+        return "Cell({})\ng(n) = {}\nh(n) = {}\nf(n) = {}".format(self.index, self.get_gscore(), self.get_heuristic(), self.fscore)
+
+    def get_heuristic(self):
         return self.hscore
 
-    def getF(self):
+    def get_gscore(self):
+        return self.gscore 
+
+    def get_fscore(self):
         return self.fscore
 
     def getChildren(self):
@@ -54,14 +60,13 @@ class Cell:
         return children
 
     def getIndex(self):
-
         return (self.index)
 
 
 def func_Astar(start, goal, maze, dim):
 
     fringe = PriorityQueue()
-    fringe.put(PrioritizedItem(start.getF(), start))
+    fringe.put(PrioritizedItem(start.get_fscore(), start))
 
     visited = set()
 
@@ -83,15 +88,13 @@ def func_Astar(start, goal, maze, dim):
         if [current.x, current.y] == goal:
             return current
 
-        currentg = current.getG()
+        currentg = current.get_gscore()
         children = current.getChildren()
-        for child in children:
 
+        for child in children:
             if maze[child[0]][child[1]] != 1 and (child[0] * dim + child[1] not in visited):
-                child_f = currentg + 1 + np.abs(dim - 1 - child[0]) + np.abs(dim - 1 - child[1])
-                child_parent = current
-                child_cell = Cell(child[0], child[1], currentg + 1, dim, child_parent)
-                fringe.put(PrioritizedItem(child_f, child_cell))
+                child_cell = Cell(child[0], child[1], currentg + 1, dim, current)
+                fringe.put(PrioritizedItem(child_cell.get_fscore(), child_cell))
 
                 """
                 print('child')

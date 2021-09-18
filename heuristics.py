@@ -18,7 +18,7 @@ def __valid_input(A: list, B: list) -> bool:
         raise ValueError("Argument length should be 2")
     return True
 
-def euclidean(A: list, B: list) -> float:
+def __euclidean(A: list, B: list) -> float:
     """
     Computes the Euclidean distance between two coordinate.
     The Euclidean distance between two coordinate A and B, is defined as:
@@ -39,7 +39,7 @@ def euclidean(A: list, B: list) -> float:
         Bx, By = B
         return ((Ax - Bx) ** 2 + (Ay - By) ** 2) ** 0.5
 
-def manhattan(A: list, B: list) -> float:
+def __manhattan(A: list, B: list) -> float:
     """
     Computes the Manhattan distance between two coordinate.
     The Manhattan distance between two coordinate A and B, is defined as:
@@ -60,7 +60,7 @@ def manhattan(A: list, B: list) -> float:
         Bx, By = B
         return (abs(Ax - Bx) + abs(Ay - By))
 
-def chebyshev(A: list, B: list) -> float:
+def __chebyshev(A: list, B: list) -> float:
     """
     Computes the Chebyshev distance between two coordinate.
     The Chebyshev distance between two coordinate A and B, is defined as:
@@ -80,3 +80,28 @@ def chebyshev(A: list, B: list) -> float:
         Ax, Ay = A
         Bx, By = B
         return (max(abs(Ax - Bx), abs(Ay - By)))
+
+def heuristics(A: list, B: list, option: int=0):
+    """
+    Computes the heuristic distance between two coordinate based on the option slected.
+
+    Parameters:
+    ----------
+    A : 2D coordinates of A as a list.
+    B : 2D coordinates of B as a list.
+    option : int
+        0 - Manhattan Distance (Default)
+        1 - Euclidean Distance
+        2 - Chebyshev Distance
+
+    Returns:
+    -------
+    distance : float
+        The distance between coordinate A and B based on the heuristic selected.
+    """
+    if option == 2:
+        return __chebyshev(A, B)
+    elif option == 1:
+        return __euclidean(A, B)
+    else:
+        return __manhattan(A, B)
