@@ -23,13 +23,13 @@ class Cell():
     g(n), h(n), f(n) and a pointer to parent.
     """
 
-    def __init__(self, x: int, y: int, gscore: int, dim: int, parent=None, flag: int = 0) -> None:
+    def __init__(self, x: int, y: int, gscore: int, dim: int, parent=None, flag: int = 0, option: int = 0) -> None:
         super().__init__()
         self.x = x
         self.y = y
         self._dim = dim
         self._index = self.x * self._dim + self.y
-        self.update_gscore(gscore, option=2)
+        self.update_gscore(gscore, option=option)
         self.update_parent(parent)
         self._flag = flag
 
@@ -120,23 +120,24 @@ class Gridworld():
     Upper left corner(Start) and lower right corner(End) are always unblocked.
     """
 
-    def __init__(self, dim: int, p: float) -> None:
+    def __init__(self, dim: int, p: float, option: int = 0) -> None:
         super().__init__()
         self._dim = dim
         self._density = p
         if self.__valid_input():
-            self.gridworld = [[Cell(row, col, 0, self._dim, flag=0) for col in range(
+            self.gridworld = [[Cell(row, col, 0, self._dim, flag=0, option=option) for col in range(
                 self._dim)] for row in range(self._dim)]
 
             for row in range(self._dim):
                 for col in range(self._dim):
                     if random.uniform(0, 1) < self._density:
                         self.gridworld[row][col] = Cell(
-                            row, col, 0, self._dim, flag=1)
+                            row, col, 0, self._dim, flag=1, option=option)
 
-            self.gridworld[0][0] = Cell(0, 0, 0, self._dim, flag=0)
+            self.gridworld[0][0] = Cell(
+                0, 0, 0, self._dim, flag=0, option=option)
             self.gridworld[self._dim-1][self._dim -
-                                        1] = Cell(self._dim-1, self._dim-1, 0, self._dim, flag=0)
+                                        1] = Cell(self._dim-1, self._dim-1, 0, self._dim, flag=0, option=option)
 
     def __valid_input(self):
         """
