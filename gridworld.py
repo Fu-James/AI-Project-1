@@ -22,13 +22,14 @@ class Cell():
     cell: A object which mainly holds four values.
     g(n), h(n), f(n) and a pointer to parent.
     """
+
     def __init__(self, x: int, y: int, gscore: int, dim: int, parent=None, flag: int = 0) -> None:
         super().__init__()
         self.x = x
         self.y = y
         self._dim = dim
         self._index = self.x * self._dim + self.y
-        self.update_gscore(gscore)
+        self.update_gscore(gscore, option=2)
         self.update_parent(parent)
         self._flag = flag
 
@@ -89,9 +90,9 @@ class Cell():
     def update_flag(self, flag: int) -> None:
         self._flag = flag
 
-    def update_gscore(self, gscore: int) -> None:
+    def update_gscore(self, gscore: int, option: int = 0) -> None:
         self._gscore = gscore
-        self.__update_heuristics()
+        self.__update_heuristics(option)
         self.__update_f()
 
     def __update_heuristics(self, option: int = 0) -> None:
