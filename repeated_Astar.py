@@ -18,6 +18,7 @@ class Repeated_Astar():
     agent: Unexplored Gridworld as a 2-D cell array. Dimension is (dim) * (dim).
     The knowledge of the agent increases as it explored through the maze to find path between the start and goal cell.
     """
+
     def __init__(self, dim: int, p: float, start: list, goal: list, maze: Gridworld):
         self._dim = dim
         self._start = start
@@ -30,7 +31,7 @@ class Repeated_Astar():
         """
         This function checks whether the path has any blocked cell. If the cell is not blocked, we will update the unexplored 
         maze and add this cell to out knowledge grid.
-        
+
         Returns:
         -------
         blocked cell, status_string: Returns the blocked cell if present in the path along with a status string to indicate.
@@ -49,7 +50,7 @@ class Repeated_Astar():
     def generate_path(self, current) -> list:
         """
         This function will help the agent to find the path between current and their parent cell.
-        
+
         Returns:
         -------
         path: Returns a path between the current cell and it's parent until the hightes hierarchical parent is found.
@@ -64,7 +65,7 @@ class Repeated_Astar():
     def find_path(self):
         """
         Main function which will help the agent to find the path between start and goal cell.
-        
+
         Returns:
         -------
         path, status_string: Returns a path between the start and goal node if found, otherwise will return None.
@@ -72,7 +73,8 @@ class Repeated_Astar():
         """
         start_cell = Cell(self._start[0], self._start[1], 0, self._dim, None)
         while True:
-            goal_cell, status = func_Astar(start_cell, self._goal, self._knowledge, self._dim)
+            goal_cell, status = func_Astar(
+                start_cell, self._goal, self._knowledge, self._dim)
             if status == 'no_solution':
                 return None, 'no_solution'
             path = self.generate_path(goal_cell)

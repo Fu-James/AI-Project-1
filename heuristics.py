@@ -18,6 +18,7 @@ def __valid_input(A: list, B: list) -> bool:
         raise ValueError("Argument length should be 2")
     return True
 
+
 def __euclidean(A: list, B: list) -> float:
     """
     Computes the Euclidean distance between two coordinate.
@@ -38,6 +39,7 @@ def __euclidean(A: list, B: list) -> float:
         Ax, Ay = A
         Bx, By = B
         return ((Ax - Bx) ** 2 + (Ay - By) ** 2) ** 0.5
+
 
 def __manhattan(A: list, B: list) -> float:
     """
@@ -60,6 +62,7 @@ def __manhattan(A: list, B: list) -> float:
         Bx, By = B
         return (abs(Ax - Bx) + abs(Ay - By))
 
+
 def __chebyshev(A: list, B: list) -> float:
     """
     Computes the Chebyshev distance between two coordinate.
@@ -81,7 +84,8 @@ def __chebyshev(A: list, B: list) -> float:
         Bx, By = B
         return (max(abs(Ax - Bx), abs(Ay - By)))
 
-def heuristics(A: list, B: list, option: int=0):
+
+def heuristics(A: list, B: list, option: int = 0):
     """
     Computes the heuristic distance between two coordinate based on the option slected.
 

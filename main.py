@@ -2,6 +2,7 @@ import matplotlib as ml
 import matplotlib.pyplot as plt
 from gridworld import Gridworld
 
+
 def main():
     """
     A sample main function for showing how the create_gridworld function works.
@@ -15,6 +16,7 @@ def main():
     plt.figure(figsize=(5, 5))
     plt.imshow(gw.gridworld)
     plt.show()
+
 
 if __name__ == "__main__":
     main()
