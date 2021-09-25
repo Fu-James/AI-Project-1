@@ -1,115 +1,57 @@
-import numpy as np
 from queue import PriorityQueue
+from gridworld import Cell, Gridworld
 
 # PrioritizedItem is used to configure the priority queue
 # such that it will only compare the priority, not the item
 from dataclasses import dataclass, field
 from typing import Any
+
+
 @dataclass(order=True)
-class PrioritizedItem:
+class PrioritizedItem():
     priority: int
-    item: Any=field(compare=False)
+    item: Cell = field(compare=False)
 
 
-class Cell:
+def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
+    """
+    Create a cell.
+    Parameters:
+    ----------
+    start : Initial search point
+    goal : x and y coordinate of the goal cell
+    maze : Unexplored gridworld
+    dim : Dimension of the gridworld as a int.
 
-    def __init__(self, x, y, gscore, dim, parent):
-        self.x = x
-        self.y = y
-        self.dim = dim
-        self.index = x * self.dim + y
-        self.gscore = gscore
-        self.hscore = np.abs(self.dim - 1 - x) + np.abs(self.dim - 1 - y)  # to be replaced by huristic function
-        self.fscore = self.gscore + self.hscore
-        self.parent = parent
-        # self.children = None
-
-    def printSelf(self):
-        print('print self start')
-        print(self.index)
-        print(self.gscore)
-        print(self.hscore)
-        print(self.fscore)
-        print('print self end')
-
-    def getG(self):
-        return self.gscore
-
-    def getH(self):
-        return self.hscore
-
-    def getF(self):
-        return self.fscore
-
-    def getChildren(self):
-        children = []
-        if self.x - 1 >= 0:  # up
-            children.append([self.x - 1, self.y])
-        if self.y + 1 < self.dim:  # right
-            children.append([self.x, self.y + 1])
-        if self.x + 1 < self.dim:  # down
-            children.append([self.x + 1, self.y])
-        if self.y - 1 >= 0:  # left
-            children.append([self.x, self.y - 1])
-        return children
-
-    def getIndex(self):
-
-        return (self.index)
-
-
-def func_Astar(start, goal, maze, dim):
-
+    Returns:
+    -------
+    cell, status_string: Returns cell if goal node is found along with a status string.
+    """
     fringe = PriorityQueue()
-    fringe.put(PrioritizedItem(start.getF(), start))
+    fringe.put(PrioritizedItem(start.get_fscore(), start))
 
     visited = set()
-
-    trajectory = [start.getIndex()]
+    trajectory = [start.get_index()]
 
     while not fringe.empty():
         current = fringe.get().item
-        if current.getIndex() in visited:
+        if current.get_index() in visited:
             continue
-        visited.add(current.getIndex())
-        trajectory.append(current.getIndex())
-
-        """
-        print('-----')
-        print('current')
-        print(current.getIndex())
-        """
+        visited.add(current.get_index())
+        trajectory.append(current.get_index())
 
         if [current.x, current.y] == goal:
-            return current
+            return current, 'solution'
 
-        currentg = current.getG()
-        children = current.getChildren()
+        currentg = current.get_gscore()
+        children = current.get_children()
+
         for child in children:
+            maze_child = maze.get_cell(child[0], child[1])
+            if maze_child.get_flag() != 1 and (child[0] * dim + child[1] not in visited):
+                c = Cell(child[0], child[1], (currentg + 1),
+                         dim, parent=current)
+                fringe.put(PrioritizedItem(
+                    c.get_fscore(), c))
 
-            if maze[child[0]][child[1]] != 1 and (child[0] * dim + child[1] not in visited):
-                child_f = currentg + 1 + np.abs(dim - 1 - child[0]) + np.abs(dim - 1 - child[1])
-                child_parent = current
-                child_cell = Cell(child[0], child[1], currentg + 1, dim, child_parent)
-                fringe.put(PrioritizedItem(child_f, child_cell))
-
-                """
-                print('child')
-                print(str(child[0] * dim + child[1]) + ',' + str(child_f))
-                """             
-                
-    return 'no solution'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return None, 'no_solution'

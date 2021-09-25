@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from gridworld import Gridworld
 from repeated_Astar import Repeated_Astar
 
+
 def main():
     """
     A sample main function for showing how the create_gridworld function works.
@@ -12,20 +13,24 @@ def main():
     dim = int(input("Enter the dimension: "))
     p = float(input("Enter the probabilty: "))
     gw = Gridworld(dim, p)
+    print("Initial GridWorld:")
     print(gw)
-    plt.figure(num="maze", figsize=(8, 8), tight_layout=True)
-    plt.imshow(gw.gridworld)
+    plt.figure(num="Grid World", figsize=(8, 8), tight_layout=True)
+    plt.imshow(gw.get_grid_ascii())
 
     algorithm = Repeated_Astar(dim, p, [0, 0], [dim-1, dim-1], gw)
-    solution = algorithm.find_path()
-    if solution == 'no solution':
-        print('No solution')
+    solution, status = algorithm.find_path()
+    if status == 'no_solution':
+        print("No Solution.")
     else:
         for cell in solution:
-            gw.gridworld[cell.x][cell.y] = 0.5
-        plt.figure(num="solution", figsize=(8, 8), tight_layout=True)
-        plt.imshow(gw.gridworld)
-    plt.show()            
+            gw.get_cell(cell.x, cell.y).update_flag(7)
+        print("Solved GridWorld:")
+        print(gw)
+        plt.figure(num="Solved Grid World", figsize=(8, 8), tight_layout=True)
+        plt.imshow(gw.get_grid_ascii())
+    plt.show()
+
 
 if __name__ == "__main__":
     main()
