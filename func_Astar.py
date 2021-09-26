@@ -31,9 +31,8 @@ def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int, option: int =
     visited = set()
     trajectory = []
 
-    while not fringe.is_empty():
-        current_item = fringe.delete()
-        current = current_item.item
+    while not fringe.empty():
+        current = fringe.get().item
 
         # We will adding to trajectory as we have taken a step forward
         trajectory.append(current.get_index())

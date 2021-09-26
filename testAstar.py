@@ -12,9 +12,6 @@ start = Cell(0, 0, 0, dim, None)
 solution, status, explored = func_Astar(
     start, [dim-1, dim-1], gw, dim, option=option)
 
-# # track back the path
-# print('----------path (backwards)--------')
-# print(solution.get_index())
 while solution is not None:
     gw.get_cell(solution.x, solution.y).update_flag(5)
     solution = solution.get_parent()

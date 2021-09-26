@@ -3,6 +3,4 @@ __pycache__/func_Astar.cpython-39.pyc
 __pycache__/func_Astar_other_implement.cpython-39.pyc
 __pycache__/gridworld.cpython-39.pyc
 __pycache__/repeated_Astar.cpython-39.pyc
-__pycache__/heuristics.cpython-39.pyc
-__pycache__/PriorityQueue.cpython-39.pyc
-*.png
+images

@@ -34,6 +34,8 @@ class Cell():
         self.update_gscore(gscore, option=option)
         self.update_parent(parent)
         self._flag = flag
+        self._no_of_neighbors = 0
+        self._no_of_blocked_neighbors = 0
 
     def get_heuristic(self) -> float:
         return self._hscore
@@ -86,6 +88,12 @@ class Cell():
     def get_flag(self) -> int:
         return self._flag
 
+    def get_no_of_neighbors(self) -> int:
+        return self._no_of_neighbors
+    
+    def get_no_of_blocked_neighbors(self) -> int:
+        return self._no_of_blocked_neighbors
+
     def update_parent(self, parent) -> None:
         self._parent = parent
 
@@ -103,6 +111,12 @@ class Cell():
 
     def __update_f(self) -> None:
         self._fscore = self.get_gscore() + self.get_heuristic()
+
+    def update_no_of_neighbors(self, no_of_neighbors) -> None:
+        self._no_of_neighbors = no_of_neighbors
+    
+    def update_no_of_blocked_neighbors(self, no_of_blocked_neighbors) -> None:
+        self._no_of_blocked_neighbors = no_of_blocked_neighbors
 
     def __str__(self) -> str:
         return "Cell({})\ng(n) = {}\nh(n) = {}\nf(n) = {}".format(self._index, self.get_gscore(), self.get_heuristic(), self._fscore)
@@ -174,7 +188,7 @@ class Gridworld():
     def get_cell(self, x: int, y: int) -> Cell:
         return self.gridworld[x][y]
 
-    def get_grid_ascii(self) -> list[list[int]]:
+    def get_grid_ascii(self) -> [[int]]:
         return [[self.gridworld[row][col].get_flag() for col in range(self._dim)] for row in range(self._dim)]
 
     def update_cell(self, cell: Cell, x: int, y: int) -> None:

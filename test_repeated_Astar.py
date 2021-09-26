@@ -1,4 +1,3 @@
-import matplotlib as ml
 import matplotlib.pyplot as plt
 from gridworld import Gridworld
 from repeated_Astar import Repeated_Astar
@@ -12,22 +11,21 @@ def main():
     """
     dim = int(input("Enter the dimension: "))
     p = float(input("Enter the probabilty: "))
-    option = 0
     gw = Gridworld(dim, p)
     print("Generated Gridworld:")
     print(gw)
     plt.figure(num="Grid World", figsize=(8, 8), tight_layout=True)
     plt.imshow(gw.get_grid_ascii())
 
-    algorithm = Repeated_Astar(dim, p, [0, 0], [dim-1, dim-1], gw, option)
-    solution, status = algorithm.find_path()
-
+    agent = Repeated_Astar(dim, [0, 0], [dim-1, dim-1], gw)
+    solution, status, trajectory = agent.find_path()
     if status == 'no_solution':
         print("No Solution.")
     else:
         for cell in solution:
-            gw.get_cell(cell.x, cell.y).update_flag(0.5)
-        print("Solved GridWorld:")
+            gw.get_cell(cell.x, cell.y).update_flag(7)
+        print("Overall trajectory is:", trajectory)
+        print(" Solved GridWorld:")
         print(gw)
         plt.figure(num="Solved Grid World", figsize=(8, 8), tight_layout=True)
         plt.imshow(gw.get_grid_ascii())
