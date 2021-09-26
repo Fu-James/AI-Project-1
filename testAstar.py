@@ -1,21 +1,22 @@
 from func_Astar import *
+import numpy as np
 
-testmaze = np.zeros([5,5])
-testmaze[1,2]=1
-testmaze[2,2]=1
-testmaze[2,3]=1
-testmaze[3,2]=1
-testmaze[3,3]=1
-testmaze[4,3]=1
-print(testmaze)
+dim = 10
+option = 0
+gw = Gridworld(dim, 0.1)
+print("Generated Gridworld:")
+print(gw)
 
-dim=5
-start = Cell(0,0,0,dim,None)
-result = func_Astar(start, [dim-1,dim-1] , testmaze, dim )
 
-##track back the path
-print('----------path (backwards)--------')
-print(result.getIndex())
-while result.parent is not None:
-  result = result.parent
-  print(result.getIndex())
+start = Cell(0, 0, 0, dim, None)
+solution, status, explored = func_Astar(
+    start, [dim-1, dim-1], gw, dim, option=option)
+
+# # track back the path
+# print('----------path (backwards)--------')
+# print(solution.get_index())
+while solution is not None:
+    gw.get_cell(solution.x, solution.y).update_flag(5)
+    solution = solution.get_parent()
+print("Solved GridWorld:")
+print(gw)

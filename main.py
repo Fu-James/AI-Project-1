@@ -12,11 +12,11 @@ def main():
     dim = int(input("Enter the dimension: "))
     p = float(input("Enter the probabilty: "))
     gw = Gridworld(dim, p)
+    print("Generated Gridworld:")
     print(gw)
     plt.figure(figsize=(5, 5))
-    plt.imshow(gw.gridworld)
+    plt.imshow(gw.get_grid_ascii())
     plt.show()
-
 
 if __name__ == "__main__":
     main()

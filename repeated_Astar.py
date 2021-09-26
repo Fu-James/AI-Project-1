@@ -19,11 +19,12 @@ class Repeated_Astar():
     The knowledge of the agent increases as it explored through the maze to find path between the start and goal cell.
     """
 
-    def __init__(self, dim: int, p: float, start: list, goal: list, maze: Gridworld):
+    def __init__(self, dim: int, p: float, start: list, goal: list, maze: Gridworld, option: int = 0):
         self._dim = dim
         self._start = start
         self._goal = goal
         self._maze = maze
+        self._option = option
         # Create an unblocked gridworld
         self._knowledge = Gridworld(self._dim, 0.0)
 
@@ -73,8 +74,8 @@ class Repeated_Astar():
         """
         start_cell = Cell(self._start[0], self._start[1], 0, self._dim, None)
         while True:
-            goal_cell, status = func_Astar(
-                start_cell, self._goal, self._knowledge, self._dim)
+            goal_cell, status, explored = func_Astar(
+                start_cell, self._goal, self._knowledge, self._dim, option=self._option)
             if status == 'no_solution':
                 return None, 'no_solution'
             path = self.generate_path(goal_cell)
