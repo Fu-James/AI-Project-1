@@ -73,10 +73,10 @@ class Repeated_Astar():
         """
         trajectory = -1
         while path:
-            trajectory += 1
             current = path.pop()
             if self._maze.get_cell(current.x, current.y).get_flag() == 1:
                 return current.get_parent(), 'blocked', trajectory
+            trajectory += 1
 
             children = current.get_children()
             for child in children:
@@ -98,7 +98,6 @@ class Repeated_Astar():
         """
         trajectory = -1
         while path:
-            trajectory += 1
             current = path.pop()
             if self._maze.get_cell(current.x, current.y).get_flag() == 1:
                 current = current.get_parent()
@@ -107,6 +106,7 @@ class Repeated_Astar():
                     return current, 'blocked', trajectory + trajectory_backtrack
                 else:
                     return current, 'blocked', trajectory
+            trajectory += 1
 
             children = current.get_children()
             blocked_neighbors_count = 0
