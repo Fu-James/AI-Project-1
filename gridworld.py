@@ -1,5 +1,4 @@
 from heuristics import heuristics
-from array import *
 import random
 
 
@@ -16,7 +15,10 @@ class Cell():
     flag : 
         0 indicates unblocked.
         1 indicates blocked.
-
+    option : int
+        0 - Manhattan Distance (Default)
+        1 - Euclidean Distance
+        2 - Chebyshev Distance
     Returns:
     -------
     cell: A object which mainly holds four values.
@@ -113,7 +115,10 @@ class Gridworld():
     ----------
     dim : Dimension of the gridworld as a int.
     p : Probability that each cell would be blocked as a float. (0 < p < 1).
-
+    option : int
+        0 - Manhattan Distance (Default)
+        1 - Euclidean Distance
+        2 - Chebyshev Distance
     Returns:
     -------
     gridworld: Gridworld as a 2-D cell array. Dimension is (dim) * (dim).
@@ -125,15 +130,18 @@ class Gridworld():
         self._dim = dim
         self._density = p
         if self.__valid_input():
+            # Create a unblocked grid
             self.gridworld = [[Cell(row, col, 0, self._dim, flag=0, option=option) for col in range(
                 self._dim)] for row in range(self._dim)]
 
+            # Assigning blocked flag as per density
             for row in range(self._dim):
                 for col in range(self._dim):
                     if random.uniform(0, 1) < self._density:
                         self.gridworld[row][col] = Cell(
                             row, col, 0, self._dim, flag=1, option=option)
 
+            # Unblocking start and goal cell
             self.gridworld[0][0] = Cell(
                 0, 0, 0, self._dim, flag=0, option=option)
             self.gridworld[self._dim-1][self._dim -
