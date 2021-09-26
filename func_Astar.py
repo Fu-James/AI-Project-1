@@ -41,7 +41,7 @@ def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
         trajectory.append(current.get_index())
 
         if [current.x, current.y] == goal:
-            return current, 'solution'
+            return current, 'solution', [visited, trajectory]
 
         currentg = current.get_gscore()
         children = current.get_children()
@@ -54,4 +54,4 @@ def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
                 fringe.put(PrioritizedItem(
                     c.get_fscore(), c))
 
-    return None, 'no_solution'
+    return None, 'no_solution', [visited, trajectory]
