@@ -32,7 +32,7 @@ def get_data(dim: int, grid_per_pass: int, increment_by: float, option: int):
     visited = []
     trajectory = []
 
-    for increment in np.arange(0.01, 1.0, increment_by):
+    for increment in np.arange(0.01, 0.71, increment_by):
         solved_count = 0
         avg_time = []
         visi = []
@@ -203,13 +203,14 @@ def create_visited_trajectory(option1, option2, option3):
     plt.title("Number of Cells Visited and Trajectory Lenght",
               fontdict=font_style)
 
-    min_dist_op1 = [abs(i - 0.5) for i in solvability_op1]
+    close_to = 0.3
+    min_dist_op1 = [abs(i - close_to) for i in solvability_op1]
     half_index_op1 = min_dist_op1.index(min(min_dist_op1))
 
-    min_dist_op2 = [abs(i - 0.5) for i in solvability_op2]
+    min_dist_op2 = [abs(i - close_to) for i in solvability_op2]
     half_index_op2 = min_dist_op2.index(min(min_dist_op2))
 
-    min_dist_op3 = [abs(i - 0.5) for i in solvability_op3]
+    min_dist_op3 = [abs(i - close_to) for i in solvability_op3]
     half_index_op3 = min_dist_op3.index(min(min_dist_op3))
 
     op1 = [visited_op1[half_index_op1], trajectory_op1[half_index_op1]]
@@ -239,12 +240,12 @@ def create_visited_trajectory(option1, option2, option3):
     plt.savefig(filename)
 
 
-def split_list(result: list, split_by: float = 2.0) -> list:
+def split_list(result: list, split_by: float = 1.1) -> list:
     return result[:len(result)//int(split_by)]
 
 
 if __name__ == "__main__":
-    master_dim = [10]
+    master_dim = [101]
     grid_per_pass = [100]
     increment_by = 0.01
 
