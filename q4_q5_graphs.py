@@ -42,7 +42,7 @@ def get_data(dim: int, grid_per_pass: int, increment_by: float, option: int):
             grid = Gridworld(dim, increment, option=option)
             # Start Time
             start_time = time.process_time_ns()
-            status, explored = isSolvable(start, goal, grid, dim)
+            status, explored = isSolvable(start, goal, grid, dim, option)
             if status:
                 solved_count += 1
             end_time = time.process_time_ns()
@@ -63,7 +63,7 @@ def get_data(dim: int, grid_per_pass: int, increment_by: float, option: int):
     return probability, solvability, duration, visited, trajectory
 
 
-def isSolvable(start: Cell, goal: list, gridworld: Gridworld, dim: int) -> bool:
+def isSolvable(start: Cell, goal: list, gridworld: Gridworld, dim: int, option: int) -> bool:
     """
     A utility method which returns bool based on search status 
     Parameters:
@@ -77,7 +77,8 @@ def isSolvable(start: Cell, goal: list, gridworld: Gridworld, dim: int) -> bool:
     -------
     bool: Returns bool value according to the A* search status
     """
-    solution, status, explored = func_Astar(start, goal, gridworld, dim)
+    solution, status, explored = func_Astar(
+        start, goal, gridworld, dim, option)
     if status == "no_solution":
         return False, explored
     else:
@@ -165,9 +166,12 @@ def q5(dim: int, grid_per_pass: int, option1, option2, option3):
     ax1.set_yticks(np.arange(0.0, 1.2, 0.1))
     ax1.grid()
 
-    ax1.plot(probability_op1, solvability_op1, label='Manhattan Distance')
-    ax1.plot(probability_op2, solvability_op2, label='Euclidean Distance')
-    ax1.plot(probability_op3, solvability_op3, label='Chebyshev Distance')
+    ax1.plot(split_list(probability_op1), split_list(
+        solvability_op1), label='Manhattan Distance')
+    ax1.plot(split_list(probability_op2), split_list(
+        solvability_op2), label='Euclidean Distance')
+    ax1.plot(split_list(probability_op3), split_list(
+        solvability_op3), label='Chebyshev Distance')
     ax1.legend(loc="upper right")
 
     title = "Time vs Density"
@@ -176,12 +180,12 @@ def q5(dim: int, grid_per_pass: int, option1, option2, option3):
     ax2.set_xticks(np.arange(0.0, 1.2, 0.1))
     ax2.grid()
 
-    ax2.plot(probability_op1,
-             duration_op1, label='Manhattan Distance')
-    ax2.plot(probability_op2,
-             duration_op2, label='Euclidean Distance')
-    ax2.plot(probability_op3,
-             duration_op3, label='Chebyshev Distance')
+    ax2.plot(split_list(probability_op1), split_list(
+        duration_op1), label='Manhattan Distance')
+    ax2.plot(split_list(probability_op2), split_list(
+        duration_op2), label='Euclidean Distance')
+    ax2.plot(split_list(probability_op3), split_list(
+        duration_op3), label='Chebyshev Distance')
     ax2.legend(loc="upper right")
 
     plt.savefig("images/{}_x_{}_{}_pass_{}.png".format(dim,
@@ -197,7 +201,7 @@ def create_visited_trajectory(option1, option2, option3):
     font_style = {'family': 'serif', 'color': 'black', 'size': 12}
     fig = plt.subplots()
     plt.title("Number of Cells Visited and Trajectory Lenght",
-                fontdict=font_style)
+              fontdict=font_style)
 
     min_dist_op1 = [abs(i - 0.5) for i in solvability_op1]
     half_index_op1 = min_dist_op1.index(min(min_dist_op1))
@@ -226,22 +230,22 @@ def create_visited_trajectory(option1, option2, option3):
     # Adding Xticks
     plt.ylabel('Cells', fontdict=font_style)
     plt.xticks([r + barWidth for r in range(len(op1))],
-                ['Visited', 'Trajectory'])
+               ['Visited', 'Trajectory'])
 
     plt.legend(loc="upper right")
     plt.grid()
     filename = "images/{}_x_{}_{}_pass_{}.png".format(
         master_dim[i], master_dim[i], "Visited_Trajectory", grid_per_pass[j])
     plt.savefig(filename)
-    
+
 
 def split_list(result: list, split_by: float = 2.0) -> list:
-    return result[:len(result)//split_by]
+    return result[:len(result)//int(split_by)]
 
 
 if __name__ == "__main__":
-    master_dim = [101]
-    grid_per_pass = [10, 50, 100]
+    master_dim = [10]
+    grid_per_pass = [100]
     increment_by = 0.01
 
     master_result = q4(master_dim, grid_per_pass, increment_by)
