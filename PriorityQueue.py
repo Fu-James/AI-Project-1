@@ -1,35 +1,33 @@
 # PrioritizedItem is used to configure the priority queue
 # such that it will only compare the priority, not the item
-from dataclasses import dataclass, field
-from typing import Any
 from gridworld import Cell, Gridworld
-
+import math
 
 class PrioritizedItem():
-    def __init__(self, priority, cell):            
+    def __init__(self, priority: int, cell: Cell) -> None:            
         self.priority = priority
         self.item = cell
 
-class PriorityQueue(object):
+class PriorityQueue():
     def __init__(self):
         self.queue = []
   
     def __str__(self):
         return ' '.join([str(i) for i in self.queue])
   
-    def isEmpty(self):
+    def is_empty(self):
         return len(self.queue) == 0
   
-    def insert(self, data):
-        self.queue.append(data)
+    def insert(self, item):
+        self.queue.append(item)
   
     def delete(self):
-        max = 0
+        min = 0
         for i in range(len(self.queue)):
             current_item = self.queue[i]
-            max_item = self.queue[max]
-            if current_item.priority > max_item.priority:
-                max = i
-        item = self.queue[max]
-        del self.queue[max]
+            min_item = self.queue[min]
+            if current_item.priority < min_item.priority:
+                min = i
+        item = self.queue[min]
+        del self.queue[min]
         return item
