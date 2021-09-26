@@ -4,7 +4,7 @@ from repeated_Astar import Repeated_Astar
 import numpy as np
 import time
 
-def get_data(dim: int, grid_per_pass: int, increment_by: float, options: []):
+def get_data(dim: int, grid_per_pass: int, increment_by: float, options: int = 0):
     """
     Main method to get probability, solvability and duration.    
     Parameters:
