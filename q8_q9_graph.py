@@ -13,7 +13,7 @@ def get_data(dim: int, grid_per_pass: int, increment_by: float, options: []):
     dim: Dimension of grid
     grid_per_pass: No of grids per pass for a probability
     increment_by: Increment step for probability
-    option: Set heuristic option
+    options: [0] decide if it is for q8 or q9, [1, ...] are the arguments
 
     Returns:
     -------
@@ -23,6 +23,8 @@ def get_data(dim: int, grid_per_pass: int, increment_by: float, options: []):
     start = Cell(0, 0, 0, dim, None)
     goal = [dim - 1, dim - 1]
     total = 0
+    is_q8 = (options[0] == 'q8')
+    options = options[1:]
 
     # Result list to store [probability], [solvability], and [duration]
     probability = [[] for row in range(len(options))]
@@ -30,17 +32,20 @@ def get_data(dim: int, grid_per_pass: int, increment_by: float, options: []):
     duration = [[] for row in range(len(options))]
     overall_trajectory = [[] for row in range(len(options))]
 
-    for increment in np.arange(0.02, 1, increment_by):
-        solved_count = [0] * len(options)
+    for increment in np.arange(0.02, 0.5, increment_by):
+        solved_count = [0 for column in range(len(options))]
         avg_time = [[] for row in range(len(options))]
-        trajectory_per_density = [0] * len(options)
+        trajectory_per_density = [0 for column in range(len(options))]
         for i in range(grid_per_pass):
             total += 1
             grid = Gridworld(dim, increment)
             for index in range(len(options)):
                 # Start Time
                 start_time = time.process_time_ns()
-                solvable, trajectory = isSolvable(start, goal, grid, dim, options[index])
+                if is_q8:
+                    solvable, trajectory = isSolvable(start, goal, grid, dim, options[index], 0)
+                else:
+                    solvable, trajectory = isSolvable(start, goal, grid, dim, False, options[index])
                 # End Time
                 end_time = time.process_time_ns()
                 if solvable:
@@ -60,7 +65,7 @@ def get_data(dim: int, grid_per_pass: int, increment_by: float, options: []):
     return probability, solvability, duration, overall_trajectory
 
 
-def isSolvable(start: Cell, goal: list, gridworld: Gridworld, dim: int, backtrack: bool):
+def isSolvable(start: Cell, goal: list, gridworld: Gridworld, dim: int, backtrack: bool, flag: int):
     """
     A utility method which returns bool based on search status 
     Parameters:
@@ -74,7 +79,7 @@ def isSolvable(start: Cell, goal: list, gridworld: Gridworld, dim: int, backtrac
     -------
     bool: Returns bool value according to the A* search status
     """
-    agent = Repeated_Astar(dim, [0, 0], [dim-1, dim-1], gridworld, backtrack)
+    agent = Repeated_Astar(dim, [0, 0], [dim-1, dim-1], gridworld, backtrack, flag)
     solution, status, trajectory = agent.find_path()
     if status == "no_solution":
         return False, trajectory
@@ -92,7 +97,7 @@ def q8(dim: list, grid_per_pass: list, increment_by: float):
         grid_result = []
         for grid_pass in grid_per_pass:
             option_result = []
-            options = [False, True]
+            options = ['q8', False, True]
             res = get_data(dim, grid_pass, increment_by, options)
             option_result.append(res)
             probability, solvability, duration, trajectory = res
@@ -127,7 +132,7 @@ def q8(dim: list, grid_per_pass: list, increment_by: float):
                      duration[0], label='Without Backtrack')
             ax2.plot(probability[1],
                      duration[1], label='Backtrack')
-            ax2.legend(loc="upper right")
+            ax2.legend(loc="upper left")
 
             title = "Overall Trajectory vs Density"
             ax1.set_title(title, fontdict=font_style)
@@ -138,7 +143,7 @@ def q8(dim: list, grid_per_pass: list, increment_by: float):
                      trajectory[0], label='Without Backtrack')
             ax1.plot(probability[1],
                      trajectory[1], label='Backtrack')
-            ax1.legend(loc="upper right")
+            ax1.legend(loc="upper left")
 
             # Add folder 'images'
             plt.savefig("images/{}_x_{}_{}_pass_{}.png".format(dim,
@@ -147,9 +152,83 @@ def q8(dim: list, grid_per_pass: list, increment_by: float):
         master_result.append(grid_result)
     return master_result
 
+def q9(dim: list, grid_per_pass: list, increment_by: float):
+    master_result = []
+    for dim in dim:
+        grid_result = []
+        for grid_pass in grid_per_pass:
+            option_result = []
+            options = ['q9', 0, 2, 3, 4]
+            res = get_data(dim, grid_pass, increment_by, options)
+            option_result.append(res)
+            probability, solvability, duration, trajectory = res
+            font_style = {'family': 'serif', 'color': 'black', 'size': 12}
+            min_dist = [abs(i - 0.5) for i in solvability[0]]
+            half_index = min_dist.index(min(min_dist))
+            args = "\nGrid Dimension: {} x {}".format(dim, dim)
+
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
+            fig.subplots_adjust(top=0.8)
+            fig.suptitle(args)
+
+            # title = "Solvability vs Density"
+            # ax1.set_title(title, fontdict=font_style)
+            # ax1.set(xlabel="Density", ylabel="Solvability")
+
+            # ax1.set_xticks(np.arange(0.0, 1.2, 0.1))
+            # ax1.set_yticks(np.arange(0.0, 1.2, 0.1))
+            # ax1.grid()
+
+            # ax1.plot(probability, solvability, label='Without Backtrack')
+            # ax1.plot(probability_backtrack, solvability_backtrack, label='Backtrack')
+            # ax1.legend(loc="upper right")
+
+            title = "Time vs Density"
+            ax2.set_title(title, fontdict=font_style)
+            ax2.set(xlabel="Density", ylabel="Time (nanoseconds)")
+            ax2.set_xticks(np.arange(0.0, 1.2, 0.1))
+            ax2.grid()
+
+            ax2.plot(probability[0],
+                     duration[0], label='Manhattan')
+            # ax2.plot(probability[1],
+            #          duration[1], label='Euclidean')
+            ax2.plot(probability[1],
+                     duration[1], label='Chebyshev')
+            ax2.plot(probability[2],
+                     duration[2], label='Double Manhattan')
+            ax2.plot(probability[3],
+                     duration[3], label='Double Chebyshev')
+            ax2.legend(loc="upper right")
+
+            title = "Overall Trajectory vs Density"
+            ax1.set_title(title, fontdict=font_style)
+            ax1.set(xlabel="Density", ylabel="Overall Trajectory")
+            ax1.grid()
+
+            ax1.plot(probability[0],
+                     trajectory[0], label='Manhattan')
+            # ax1.plot(probability[1],
+            #          trajectory[1], label='Euclidean')
+            ax1.plot(probability[1],
+                     trajectory[1], label='Chebyshev')
+            ax1.plot(probability[2],
+                     trajectory[2], label='Double Manhattan')
+            ax1.plot(probability[3],
+                     trajectory[3], label='Double Chebyshev')
+            ax1.legend(loc="upper right")
+
+            # Add folder 'images'
+            plt.savefig("images/{}_x_{}_{}_pass_{}.png".format(dim,
+                dim, "Weighted Heuristic", grid_pass))
+            grid_result.append(option_result)
+        master_result.append(grid_result)
+    return master_result
+
 if __name__ == "__main__":
     master_dim = [101]
-    grid_per_pass = [100]
+    grid_per_pass = [50]
     increment_by = 0.02
 
-    master_result = q8(master_dim, grid_per_pass, increment_by)
+    # master_result = q8(master_dim, grid_per_pass, increment_by)
+    master_result = q9(master_dim, grid_per_pass, increment_by)
