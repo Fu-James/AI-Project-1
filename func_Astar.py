@@ -13,7 +13,7 @@ class PrioritizedItem():
     item: Cell = field(compare=False)
 
 
-def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
+def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int, flag: int = 0) -> Cell:
     """
     Create a cell.
     Parameters:
@@ -50,7 +50,7 @@ def func_Astar(start: Cell, goal: list, maze: Gridworld, dim: int) -> Cell:
             maze_child = maze.get_cell(child[0], child[1])
             if maze_child.get_flag() != 1 and (child[0] * dim + child[1] not in visited):
                 c = Cell(child[0], child[1], (currentg + 1),
-                         dim, parent=current)
+                         dim, current, flag)
                 fringe.put(PrioritizedItem(
                     c.get_fscore(), c))
 

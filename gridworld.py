@@ -28,9 +28,9 @@ class Cell():
         self.y = y
         self._dim = dim
         self._index = self.x * self._dim + self.y
+        self._flag = flag
         self.update_gscore(gscore)
         self.update_parent(parent)
-        self._flag = flag
         self._no_of_neighbors = 0
         self._no_of_blocked_neighbors = 0
 
@@ -99,7 +99,7 @@ class Cell():
 
     def update_gscore(self, gscore: int) -> None:
         self._gscore = gscore
-        self.__update_heuristics()
+        self.__update_heuristics(self._flag)
         self.__update_f()
 
     def __update_heuristics(self, option: int = 0) -> None:
